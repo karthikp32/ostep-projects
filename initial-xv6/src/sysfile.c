@@ -77,6 +77,28 @@ sys_read(void)
     return -1;
   return fileread(f, p, n);
 }
+//Approach 1:
+//pointer to eax register
+//if eax register has value 5, then readcount++
+//do i keep polling eax?
+//do i check eax every time its value is updated?
+//can the value in eax be 5 for another reason like a different sys call returns 5?
+
+//within sys_getreadcount, return variable readcount
+
+//Approach 2:
+//global variable that can be accessed between files
+//within syscall(void) function in syscall.c, if num == 5, then readcount++
+//within sys_getreadcount, return globally accessible variable readcount
+//pros: seems simpler, use of global variables seems okay in this context given he uses extern keyword
+
+extern int readcount;
+
+int 
+sys_getreadcount(void)
+{
+  return readcount; 
+}
 
 int
 sys_write(void)
