@@ -9872,7 +9872,7 @@ argfd(int n, int *pfd, struct file **pf)
 80104d87:	8d b4 26 00 00 00 00 	lea    0x0(%esi,%eiz,1),%esi
 80104d8e:	66 90                	xchg   %ax,%ax
 
-80104d90 <sys_getreadcount>:
+80104d90 <getreadcount>:
 {
 80104d90:	f3 0f 1e fb          	endbr32 
 }

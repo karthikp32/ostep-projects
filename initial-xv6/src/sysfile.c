@@ -95,7 +95,7 @@ sys_read(void)
 extern int readcount;
 
 int 
-sys_getreadcount(void)
+getreadcount(void)
 {
   return readcount; 
 }

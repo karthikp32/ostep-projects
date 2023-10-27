@@ -234,7 +234,6 @@
 80106038 vector85
 8010602f vector84
 8010644f vector183
-80104d90 sys_getreadcount
 8010632f vector159
 801065ab vector212
 80104eb0 sys_link
@@ -434,6 +433,7 @@
 801062ff vector155
 80106767 vector249
 801001f0 brelse
+80104d90 getreadcount
 80106773 vector250
 80106197 vector124
 80106119 vector110
