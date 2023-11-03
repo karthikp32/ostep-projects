@@ -9443,50 +9443,51 @@ syscall(void)
 80104a40:	f3 0f 1e fb          	endbr32 
 80104a44:	55                   	push   %ebp
 80104a45:	89 e5                	mov    %esp,%ebp
-80104a47:	56                   	push   %esi
-80104a48:	53                   	push   %ebx
+80104a47:	53                   	push   %ebx
+80104a48:	83 ec 04             	sub    $0x4,%esp
   int num;
   struct proc *curproc = myproc();
-80104a49:	e8 12 ef ff ff       	call   80103960 <myproc>
-80104a4e:	89 c3                	mov    %eax,%ebx
+80104a4b:	e8 10 ef ff ff       	call   80103960 <myproc>
+80104a50:	89 c3                	mov    %eax,%ebx
 
   num = curproc->tf->eax;
-80104a50:	8b 40 18             	mov    0x18(%eax),%eax
-80104a53:	8b 70 1c             	mov    0x1c(%eax),%esi
+80104a52:	8b 40 18             	mov    0x18(%eax),%eax
+80104a55:	8b 40 1c             	mov    0x1c(%eax),%eax
   if(num > 0 && num < NELEM(syscalls) && syscalls[num]) {
-80104a56:	8d 46 ff             	lea    -0x1(%esi),%eax
-80104a59:	83 f8 15             	cmp    $0x15,%eax
-80104a5c:	77 32                	ja     80104a90 <syscall+0x50>
-80104a5e:	8b 04 b5 c0 77 10 80 	mov    -0x7fef8840(,%esi,4),%eax
-80104a65:	85 c0                	test   %eax,%eax
-80104a67:	74 27                	je     80104a90 <syscall+0x50>
-    curproc->tf->eax = syscalls[num]();
-80104a69:	ff d0                	call   *%eax
-80104a6b:	89 c2                	mov    %eax,%edx
-80104a6d:	8b 43 18             	mov    0x18(%ebx),%eax
-80104a70:	89 50 1c             	mov    %edx,0x1c(%eax)
+80104a58:	8d 50 ff             	lea    -0x1(%eax),%edx
+80104a5b:	83 fa 15             	cmp    $0x15,%edx
+80104a5e:	77 30                	ja     80104a90 <syscall+0x50>
+80104a60:	8b 14 85 c0 77 10 80 	mov    -0x7fef8840(,%eax,4),%edx
+80104a67:	85 d2                	test   %edx,%edx
+80104a69:	74 25                	je     80104a90 <syscall+0x50>
     if (num == SYS_read) {
-80104a73:	83 fe 05             	cmp    $0x5,%esi
-80104a76:	75 37                	jne    80104aaf <syscall+0x6f>
+80104a6b:	83 f8 05             	cmp    $0x5,%eax
+80104a6e:	75 07                	jne    80104a77 <syscall+0x37>
+      //lock here
       readcount++;
-80104a78:	83 05 bc a5 10 80 01 	addl   $0x1,0x8010a5bc
+80104a70:	83 05 bc a5 10 80 01 	addl   $0x1,0x8010a5bc
+    }
+    curproc->tf->eax = syscalls[num]();
+80104a77:	ff d2                	call   *%edx
+80104a79:	89 c2                	mov    %eax,%edx
+80104a7b:	8b 43 18             	mov    0x18(%ebx),%eax
+80104a7e:	89 50 1c             	mov    %edx,0x1c(%eax)
   } else {
     cprintf("%d %s: unknown sys call %d\n",
             curproc->pid, curproc->name, num);
     curproc->tf->eax = -1;
   }
 }
-80104a7f:	8d 65 f8             	lea    -0x8(%ebp),%esp
-80104a82:	5b                   	pop    %ebx
-80104a83:	5e                   	pop    %esi
-80104a84:	5d                   	pop    %ebp
+80104a81:	8b 5d fc             	mov    -0x4(%ebp),%ebx
+80104a84:	c9                   	leave  
 80104a85:	c3                   	ret    
 80104a86:	8d b4 26 00 00 00 00 	lea    0x0(%esi,%eiz,1),%esi
 80104a8d:	8d 76 00             	lea    0x0(%esi),%esi
-            curproc->pid, curproc->name, num);
-80104a90:	8d 43 6c             	lea    0x6c(%ebx),%eax
     cprintf("%d %s: unknown sys call %d\n",
-80104a93:	56                   	push   %esi
+80104a90:	50                   	push   %eax
+            curproc->pid, curproc->name, num);
+80104a91:	8d 43 6c             	lea    0x6c(%ebx),%eax
+    cprintf("%d %s: unknown sys call %d\n",
 80104a94:	50                   	push   %eax
 80104a95:	ff 73 10             	pushl  0x10(%ebx)
 80104a98:	68 9d 77 10 80       	push   $0x8010779d
@@ -9496,11 +9497,10 @@ syscall(void)
 80104aa5:	83 c4 10             	add    $0x10,%esp
 80104aa8:	c7 40 1c ff ff ff ff 	movl   $0xffffffff,0x1c(%eax)
 }
-80104aaf:	8d 65 f8             	lea    -0x8(%ebp),%esp
-80104ab2:	5b                   	pop    %ebx
-80104ab3:	5e                   	pop    %esi
-80104ab4:	5d                   	pop    %ebp
-80104ab5:	c3                   	ret    
+80104aaf:	8b 5d fc             	mov    -0x4(%ebp),%ebx
+80104ab2:	c9                   	leave  
+80104ab3:	c3                   	ret    
+80104ab4:	66 90                	xchg   %ax,%ax
 80104ab6:	66 90                	xchg   %ax,%ax
 80104ab8:	66 90                	xchg   %ax,%ax
 80104aba:	66 90                	xchg   %ax,%ax

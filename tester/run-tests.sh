@@ -9,6 +9,8 @@ run_test () {
     local testdir=$1
     local testnum=$2
     local verbose=$3
+    echo "testdir: $testdir"
+    echo "verbose: $verbose" 
 
     # pre: execute this after before the test is done, to set up
     local prefile=$testdir/$testnum.pre
@@ -20,6 +22,8 @@ run_test () {
 	fi
     fi
     local testfile=$testdir/$testnum.run
+    echo -n "test:      "
+	cat $testfile
     if (( $verbose == 1 )); then
 	echo -n "test:      "
 	cat $testfile
