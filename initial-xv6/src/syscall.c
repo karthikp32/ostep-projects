@@ -6,7 +6,8 @@
 #include "proc.h"
 #include "x86.h"
 #include "syscall.h"
-// #include "pthread.h"
+#include "pthread.h"
+
 
 // User code makes a system call with INT T_SYSCALL.
 // System call number in %eax.
@@ -132,6 +133,7 @@ static int (*syscalls[])(void) = {
 };
 
 int readcount = 0;
+pthread_mutex_t lock;
 
 void
 syscall(void)
@@ -143,10 +145,13 @@ syscall(void)
   if(num > 0 && num < NELEM(syscalls) && syscalls[num]) {
     if (num == SYS_read) {
       //lock here
+      pthread_mutex_lock(&lock);
       readcount++;
+      pthread_mutex_unlock(&lock);
     }
     curproc->tf->eax = syscalls[num]();
     //unlock here
+
   } else {
     cprintf("%d %s: unknown sys call %d\n",
             curproc->pid, curproc->name, num);
