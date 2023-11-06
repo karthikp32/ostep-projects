@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "user.h": "c",
-        "syscall.h": "c"
+        "syscall.h": "c",
+        "pthread.h": "c"
     }
 }

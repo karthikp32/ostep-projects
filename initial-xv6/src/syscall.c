@@ -133,7 +133,16 @@ static int (*syscalls[])(void) = {
 };
 
 int readcount = 0;
-pthread_mutex_t lock;
+pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
+
+//Example:
+//readcount = 5
+//call read() and getreadcount() in separate threads
+//if read() gets executed first, readcount++ and readcount = 6
+//and getreadcount() returns 6
+//if getreadcount() gets executed first, getreadcount() returns 5
+//readcount++ and readcount = 6
+
 
 void
 syscall(void)
@@ -145,9 +154,9 @@ syscall(void)
   if(num > 0 && num < NELEM(syscalls) && syscalls[num]) {
     if (num == SYS_read) {
       //lock here
-      pthread_mutex_lock(&lock);
+      // pthread_mutex_lock(&lock);
       readcount++;
-      pthread_mutex_unlock(&lock);
+      // pthread_mutex_unlock(&lock);
     }
     curproc->tf->eax = syscalls[num]();
     //unlock here
