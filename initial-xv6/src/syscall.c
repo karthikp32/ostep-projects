@@ -6,7 +6,7 @@
 #include "proc.h"
 #include "x86.h"
 #include "syscall.h"
-#include "pthread.h"
+// #include "pthread.h"
 
 
 // User code makes a system call with INT T_SYSCALL.
@@ -133,7 +133,7 @@ static int (*syscalls[])(void) = {
 };
 
 int readcount = 0;
-pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
+// pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 
 //Example:
 //readcount = 5
