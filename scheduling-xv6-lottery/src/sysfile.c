@@ -100,6 +100,10 @@ getreadcount(void)
   return readcount; 
 }
 
+int settickets(int) {
+  return -1;
+}
+
 int
 sys_write(void)
 {
