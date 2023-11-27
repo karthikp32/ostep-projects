@@ -355,6 +355,16 @@ scheduler(void)
   }
 }
 
+// generate random numbers in the kernel;
+// some searching should lead you to a simple pseudo-random number generator
+void generateRandomNumbers() ;
+
+// make sure a child process *inherits* the same number of tickets
+// as its parents. Thus, if the parent has 10 tickets, and calls **fork()** to
+// create a child process, the child should also get 10 tickets.
+void forkNumOfTicketsToChildProcess() ;
+}
+
 // Enter scheduler.  Must hold only ptable.lock
 // and have changed proc->state. Saves and restores
 // intena because intena is a property of this
