@@ -6,6 +6,7 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
+#include "pstat.h"
 
 struct {
   struct spinlock lock;
@@ -13,6 +14,8 @@ struct {
 } ptable;
 
 static struct proc *initproc;
+
+struct pstat processTickets;
 
 int nextpid = 1;
 extern void forkret(void);
@@ -362,7 +365,19 @@ void generateRandomNumbers() ;
 // make sure a child process *inherits* the same number of tickets
 // as its parents. Thus, if the parent has 10 tickets, and calls **fork()** to
 // create a child process, the child should also get 10 tickets.
-void forkNumOfTicketsToChildProcess() ;
+void forkNumOfTicketsToChildProcess(int parentPid, int childPid) {
+  //get index of parent process within process table
+  int parentIdx = getIndexOfProcessInProcessTable(parentPid);
+  int childIdx = getIndexOfProcessInProcessTable(childPid);
+  processTickets.tickets[childIdx] = processTickets.tickets[parentIdx];
+}
+
+int getIndexOfProcessInProcessTable(int pid) {
+  for (int i=0; i < NPROC; i++) {
+    if (ptable.proc[i].pid == pid) {
+      return i;
+    }
+  }
 }
 
 // Enter scheduler.  Must hold only ptable.lock

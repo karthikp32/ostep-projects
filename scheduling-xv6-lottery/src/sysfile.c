@@ -15,6 +15,7 @@
 #include "sleeplock.h"
 #include "file.h"
 #include "fcntl.h"
+#include "pstat.h"
 
 // Fetch the nth word-sized system call argument as a file descriptor
 // and return both the descriptor and the corresponding struct file.
@@ -100,8 +101,19 @@ getreadcount(void)
   return readcount; 
 }
 
-int settickets(int) {
-  return -1;
+extern struct pstat processTickets;
+
+int settickets(int number, int processIdx) {
+  processTickets.tickets[processIdx] = number;
+}
+
+// This routine returns some
+// information about all running processes, including how many times each has
+// been chosen to run and the process ID of each. You can use this system call to
+// build a variant of the command line program `ps`, which can then be called to
+// see what is going on.
+int getpinfo() {
+
 }
 
 int
