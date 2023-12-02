@@ -7,11 +7,13 @@
 #include "proc.h"
 #include "spinlock.h"
 #include "pstat.h"
+#include <stdlib.h>
 
 struct {
   struct spinlock lock;
   struct proc proc[NPROC];
 } ptable;
+
 
 static struct proc *initproc;
 
@@ -213,6 +215,8 @@ fork(void)
 
   safestrcpy(np->name, curproc->name, sizeof(curproc->name));
 
+  forkNumOfTicketsToChildProcess(curproc->pid,np->pid);
+
   pid = np->pid;
 
   acquire(&ptable.lock);
@@ -332,11 +336,17 @@ scheduler(void)
   for(;;){
     // Enable interrupts on this processor.
     sti();
-
+    int totalNumOfTickets = 60;
+    int winningTicket = generateRandomNumbers(1, totalNumOfTickets);
+    int processIndex = 0;
+    int ticketsTraversed = 0;
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-      if(p->state != RUNNABLE)
+      
+      ticketsTraversed += processTickets.tickets[processIndex];
+
+      if(p->state != RUNNABLE || ticketsTraversed < winningTicket)
         continue;
 
       // Switch to chosen process.  It is the process's job
@@ -352,6 +362,7 @@ scheduler(void)
       // Process is done running for now.
       // It should have changed its p->state before coming back.
       c->proc = 0;
+      processIndex++;
     }
     release(&ptable.lock);
 
@@ -360,7 +371,11 @@ scheduler(void)
 
 // generate random numbers in the kernel;
 // some searching should lead you to a simple pseudo-random number generator
-void generateRandomNumbers() ;
+int generateRandomNumbers(int lowerBounds, int higherBounds) {
+  srand(1);
+  int random_number = lowerBounds + rand() / (RAND_MAX / (higherBounds - lowerBounds + 1) + 1);
+  return random_number;
+}
 
 // make sure a child process *inherits* the same number of tickets
 // as its parents. Thus, if the parent has 10 tickets, and calls **fork()** to
