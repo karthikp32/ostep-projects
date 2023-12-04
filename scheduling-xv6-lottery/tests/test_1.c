@@ -1,7 +1,7 @@
-#include "types.h"
-#include "stat.h"
-#include "user.h"
-#include "pstat.h"
+#include "../src/types.h"
+#include "../src/stat.h"
+#include "../src/user.h"
+#include "../src/pstat.h"
 
 int
 main(int argc, char *argv[])
@@ -20,12 +20,10 @@ main(int argc, char *argv[])
         x = x + i;
     }
 
-    getprocinfo(&st);
+    getpinfo(&st);
     for (j = 0; j < NPROC; j++) {
         if (st.inuse[j] && st.pid[j] >= 3 && st.pid[j] == mypid) {
-            for (l = 3; l >= 0; l--) {
-                printf(1, "level:%d \t ticks-used:%d\n", l, st.ticks[j][l]);
-            }
+                printf(1, "pid:%d \t ticks-used:%d\n", mypid, st.ticks[j]);
         }
     }
     
