@@ -111,17 +111,20 @@ int settickets(int number, int processIdx) {
 // information about all running processes, including how many times each has
 // been chosen to run and the process ID of each. You can use this system call to
 // build a variant of the command line program `ps`, which can then be called to
+extern struct processTable ptable;
+
 // see what is going on.
 int getpinfo(struct pstat* processTickets) {
   int processIndex=0;
+  int *p;
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-    if (p->sz <= 0) {
-      processTickets.inuse[processIndex] = 1;
+    if ((*p).sz <= 0) {
+      processTickets->inuse[processIndex] = 1;
     } else {
-      processTickets.inuse[processIndex] = 0;
+      processTickets->inuse[processIndex] = 0;
     }
-    processTickets.pid[processIndex] = p->pid;
-    processTickets.tickets[processIndex] = 1;
+    processTickets->pid[processIndex] = *p->pid;
+    processTickets->tickets[processIndex] = 1;
     processIndex++;
   }
 

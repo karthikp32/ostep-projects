@@ -3,6 +3,7 @@
         "user.h": "c",
         "syscall.h": "c",
         "pthread.h": "c",
-        "types.h": "c"
+        "types.h": "c",
+        "stdlib.h": "c"
     }
 }
