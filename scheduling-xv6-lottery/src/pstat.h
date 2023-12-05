@@ -2,6 +2,8 @@
 #define _PSTAT_H_
 
 #include "param.h"
+#include "proc.h"
+#include "spinlock.h"
 
 struct pstat {
   int inuse[NPROC];   // whether this slot of the process table is in use (1 or 0)
@@ -9,5 +11,10 @@ struct pstat {
   int pid[NPROC];     // the PID of each process 
   int ticks[NPROC];   // the number of ticks each process has accumulated 
 };
+
+struct processTable {
+  struct spinlock lock;
+  struct proc proc[NPROC];
+} ;
 
 #endif // _PSTAT_H_

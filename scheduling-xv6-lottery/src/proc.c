@@ -9,11 +9,8 @@
 #include "pstat.h"
 #include <stdlib.h>
 
-struct {
-  struct spinlock lock;
-  struct proc proc[NPROC];
-} ptable;
 
+struct processTable ptable;
 
 static struct proc *initproc;
 
