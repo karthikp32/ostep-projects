@@ -5,3 +5,5 @@ struct processTable {
   struct spinlock lock;
   struct proc proc[NPROC];
 } ;
+
+#endif
