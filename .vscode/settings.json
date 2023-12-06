@@ -4,6 +4,7 @@
         "syscall.h": "c",
         "pthread.h": "c",
         "types.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "defs.h": "c"
     }
 }

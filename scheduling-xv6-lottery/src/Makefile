@@ -28,6 +28,32 @@ OBJS = \
 	vectors.o\
 	vm.o\
 
+C_FILES = \
+	bio.c\
+	console.c\
+	exec.c\
+	file.c\
+	fs.c\
+	ide.c\
+	ioapic.c\
+	kalloc.c\
+	kbd.c\
+	lapic.c\
+	log.c\
+	main.c\
+	mp.c\
+	picirq.c\
+	pipe.c\
+	proc.c\
+	sleeplock.c\
+	spinlock.c\
+	string.c\
+	syscall.c\
+	sysfile.c\
+	sysproc.c\
+	trap.c\
+	uart.c\
+
 # Cross-compiling (e.g., on Mac OS X)
 # TOOLPREFIX = i386-jos-elf
 
@@ -165,6 +191,9 @@ mkfs: mkfs.c fs.h
 # details:
 # http://www.gnu.org/software/make/manual/html_node/Chained-Rules.html
 .PRECIOUS: %.o
+
+test1: ../tests/test_1.c $(C_FILES)
+	gcc ../tests/test_1.c $(C_FILES)
 
 UPROGS=\
 	_cat\
