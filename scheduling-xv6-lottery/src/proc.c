@@ -7,8 +7,8 @@
 #include "proc.h"
 #include "spinlock.h"
 #include "pstat.h"
+#include "ptable.h"
 #include <stdlib.h>
-
 
 struct processTable ptable;
 
