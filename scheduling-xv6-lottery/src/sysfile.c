@@ -118,13 +118,13 @@ extern struct processTable ptable;
 int getpinfo(struct pstat* processTickets) {
   int processIndex=0;
   int *p;
-  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-    if ((*p).sz <= 0) {
+  for(processIndex = 0; processIndex < NPROC; processIndex++){
+    if (ptable.proc[processIndex].sz <= 0) {
       processTickets->inuse[processIndex] = 1;
     } else {
       processTickets->inuse[processIndex] = 0;
     }
-    processTickets->pid[processIndex] = *p->pid;
+    processTickets->pid[processIndex] = ptable.proc[processIndex].pid;
     processTickets->tickets[processIndex] = 1;
     processIndex++;
   }
