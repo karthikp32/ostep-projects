@@ -176,6 +176,25 @@ growproc(int n)
   return 0;
 }
 
+int getIndexOfProcessInProcessTable(int pid) {
+  for (int i=0; i < NPROC; i++) {
+    if (ptable.proc[i].pid == pid) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+// make sure a child process *inherits* the same number of tickets
+// as its parents. Thus, if the parent has 10 tickets, and calls **fork()** to
+// create a child process, the child should also get 10 tickets.
+void forkNumOfTicketsToChildProcess(int parentPid, int childPid) {
+  //get index of parent process within process table
+  int parentIdx = getIndexOfProcessInProcessTable(parentPid);
+  int childIdx = getIndexOfProcessInProcessTable(childPid);
+  processTickets.tickets[childIdx] = processTickets.tickets[parentIdx];
+}
+
 // Create a new process copying p as the parent.
 // Sets up stack to return as if from system call.
 // Caller must set state of returned proc to RUNNABLE.
@@ -315,6 +334,14 @@ wait(void)
   }
 }
 
+// generate random numbers in the kernel;
+// some searching should lead you to a simple pseudo-random number generator
+int generateRandomNumbers(int lowerBounds, int higherBounds) {
+  srand(1);
+  int random_number = lowerBounds + rand() / (RAND_MAX / (higherBounds - lowerBounds + 1) + 1);
+  return random_number;
+}
+
 //PAGEBREAK: 42
 // Per-CPU process scheduler.
 // Each CPU calls scheduler() after setting itself up.
@@ -365,32 +392,6 @@ scheduler(void)
     }
     release(&ptable.lock);
 
-  }
-}
-
-// generate random numbers in the kernel;
-// some searching should lead you to a simple pseudo-random number generator
-int generateRandomNumbers(int lowerBounds, int higherBounds) {
-  srand(1);
-  int random_number = lowerBounds + rand() / (RAND_MAX / (higherBounds - lowerBounds + 1) + 1);
-  return random_number;
-}
-
-// make sure a child process *inherits* the same number of tickets
-// as its parents. Thus, if the parent has 10 tickets, and calls **fork()** to
-// create a child process, the child should also get 10 tickets.
-void forkNumOfTicketsToChildProcess(int parentPid, int childPid) {
-  //get index of parent process within process table
-  int parentIdx = getIndexOfProcessInProcessTable(parentPid);
-  int childIdx = getIndexOfProcessInProcessTable(childPid);
-  processTickets.tickets[childIdx] = processTickets.tickets[parentIdx];
-}
-
-int getIndexOfProcessInProcessTable(int pid) {
-  for (int i=0; i < NPROC; i++) {
-    if (ptable.proc[i].pid == pid) {
-      return i;
-    }
   }
 }
 
