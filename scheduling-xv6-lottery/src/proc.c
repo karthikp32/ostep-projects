@@ -8,7 +8,6 @@
 #include "spinlock.h"
 #include "pstat.h"
 #include "ptable.h"
-#include <stdlib.h>
 
 struct processTable ptable;
 
@@ -334,12 +333,14 @@ wait(void)
   }
 }
 
+static unsigned long int next = 1;
+
 // generate random numbers in the kernel;
 // some searching should lead you to a simple pseudo-random number generator
 int generateRandomNumbers(int lowerBounds, int higherBounds) {
-  srand(1);
-  int random_number = lowerBounds + rand() / (RAND_MAX / (higherBounds - lowerBounds + 1) + 1);
-  return random_number;
+    next = 1;
+    next = next * 1103515245 + 12345;
+    return (unsigned int)(next/65536) % 32768;
 }
 
 //PAGEBREAK: 42
