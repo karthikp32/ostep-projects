@@ -17,6 +17,7 @@
 #include "fcntl.h"
 #include "pstat.h"
 #include "ptable.h"
+#include "stddef.h"
 
 // Fetch the nth word-sized system call argument as a file descriptor
 // and return both the descriptor and the corresponding struct file.
@@ -105,7 +106,11 @@ getreadcount(void)
 extern struct pstat processTickets;
 
 int settickets(int number, int processIdx) {
+  if (number < 1 || processIdx < 0 || processIdx >= NPROC) {
+    return -1;
+  }
   processTickets.tickets[processIdx] = number;
+  return 0;
 }
 
 // This routine returns some
@@ -116,18 +121,20 @@ extern struct processTable ptable;
 
 // see what is going on.
 int getpinfo(struct pstat* processTickets) {
+  if (processTickets == NULL) {
+    return -1;
+  }
   int processIndex=0;
-  int *p;
   for(processIndex = 0; processIndex < NPROC; processIndex++){
-    if (ptable.proc[processIndex].sz <= 0) {
+    if (ptable.proc[processIndex].sz >= 0) {
       processTickets->inuse[processIndex] = 1;
     } else {
       processTickets->inuse[processIndex] = 0;
     }
     processTickets->pid[processIndex] = ptable.proc[processIndex].pid;
     processTickets->tickets[processIndex] = 1;
-    processIndex++;
   }
+  return 0;
 
 }
 
