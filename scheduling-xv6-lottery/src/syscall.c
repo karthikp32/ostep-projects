@@ -106,8 +106,8 @@ extern int sys_wait(void);
 extern int sys_write(void);
 extern int sys_uptime(void);
 extern int getreadcount(void);
-extern int settickets(int);
-extern int getpinfo(struct pstat*);
+extern int settickets();
+extern int getpinfo();
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
