@@ -436,7 +436,7 @@ yield(void)
 void
 forkret(void)
 {
-  static int first = 1;
+  int first = 1;
   // Still holding ptable.lock from scheduler.
   release(&ptable.lock);
 
